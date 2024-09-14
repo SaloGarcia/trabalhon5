@@ -1,10 +1,12 @@
+import controller.ProdutoJpaController;
+import controller.UsuarioJpaController;
+import controller.MovimentoJpaController;
+import controller.PessoaJpaController;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import controller.ProdutoJpaController;
-import controller.UsuarioJpaController;
 
 public class Main {
 
@@ -15,6 +17,8 @@ public class Main {
         // Passo 2: Instanciar os controladores
         ProdutoJpaController produtoCtrl = new ProdutoJpaController(emf);
         UsuarioJpaController usuarioCtrl = new UsuarioJpaController(emf);
+        MovimentoJpaController movimentoCtrl = new MovimentoJpaController(emf);
+        PessoaJpaController pessoaCtrl = new PessoaJpaController(emf);
 
         // Passo 3: Instanciar o ServerSocket na porta 4321
         try (ServerSocket serverSocket = new ServerSocket(4321)) {
@@ -27,7 +31,13 @@ public class Main {
                 System.out.println("Cliente conectado: " + clientSocket.getInetAddress());
 
                 // Criar e iniciar uma nova Thread para gerenciar a conexão do cliente
-                CadastroThread clienteThread = new CadastroThread(produtoCtrl, usuarioCtrl, clientSocket);
+                CadastroThread clienteThread = new CadastroThread(
+                    produtoCtrl, 
+                    usuarioCtrl, 
+                    movimentoCtrl, 
+                    pessoaCtrl, 
+                    clientSocket
+                );
                 new Thread(clienteThread).start();
             }
         } catch (IOException e) {

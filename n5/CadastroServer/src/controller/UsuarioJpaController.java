@@ -19,23 +19,19 @@ public class UsuarioJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    // Adicionar o método findUsuario
+    // Método para verificar login de usuário
     public Usuario findUsuario(String login, String senha) {
         EntityManager em = getEntityManager();
         try {
-            // Criar a consulta JPA para buscar o usuário com login e senha
-            Query query = em.createQuery("SELECT u FROM Usuario u WHERE u.nome = :login AND u.senha = :senha");
+            Query query = em.createNamedQuery("Usuario.findByLoginSenha");
             query.setParameter("login", login);
             query.setParameter("senha", senha);
-            try {
-                // Tenta retornar o usuário encontrado
-                return (Usuario) query.getSingleResult();
-            } catch (NoResultException e) {
-                // Retorna null se não houver resultado
-                return null;
-            }
+            return (Usuario) query.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
         } finally {
             em.close();
         }
     }
 }
+

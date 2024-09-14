@@ -1,10 +1,8 @@
 package controller;
 
 import java.io.Serializable;
-import java.util.List;  // Importar a classe List
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.criteria.CriteriaQuery;
 import model.Pessoa;
 
 public class PessoaJpaController implements Serializable {
@@ -19,16 +17,14 @@ public class PessoaJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    // Método para retornar todas as pessoas
-    public List<Pessoa> findPessoaEntities() {
+    // Método para encontrar uma pessoa pelo ID
+    public Pessoa findPessoa(Integer id) {
         EntityManager em = getEntityManager();
         try {
-            CriteriaQuery<Pessoa> cq = em.getCriteriaBuilder().createQuery(Pessoa.class);
-            cq.select(cq.from(Pessoa.class));
-            return em.createQuery(cq).getResultList();
+            return em.find(Pessoa.class, id);
         } finally {
             em.close();
         }
     }
-
 }
+
